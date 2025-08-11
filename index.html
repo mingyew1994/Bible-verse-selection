@@ -5,70 +5,130 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Daily Bible Verse</title>
   <style>
-    body { font-family: sans-serif; background: #0b1020; color: #fff; margin: 0; padding: 20px; }
-    h1 { text-align: center; margin-bottom: 20px; }
-    .btn { padding: 10px 14px; margin: 4px; border: none; border-radius: 6px; cursor: pointer; }
-    .red { background: #ef4444; color: #fff; }
-    .blue { background: #3b82f6; color: #fff; }
-    .green { background: #10b981; color: #fff; }
-    .verse { margin-top: 20px; font-size: 1.2em; text-align: center; }
-    .ref { font-size: 0.9em; color: #aaa; text-align: center; }
-    .buttons { text-align: center; }
+    :root{
+      --card-bg: rgba(255,255,255,.85);
+      --text: #0f1a2a;
+      --muted: #4b5563;
+      --red:#ef4444; --blue:#3b82f6; --green:#10b981;
+    }
+    *, *::before, *::after { box-sizing: border-box }
+    html, body { height: 100% }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+      color: var(--text);
+      /* Cloud background image — replace clouds.png with your uploaded file name */
+      background-image:
+        linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.9)),
+        url('clouds.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 32px 16px;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid rgba(15, 23, 42, .07);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(15,23,42,.12);
+      padding: 24px;
+      backdrop-filter: blur(8px);
+    }
+    h1 { text-align:center; margin: 0 0 16px; font-size: clamp(22px, 5vw, 36px); }
+    .buttons { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:12px }
+    .btn { padding: 10px 14px; border: none; border-radius: 999px; cursor: pointer; font-weight:600 }
+    .btn.red{background:var(--red); color:#fff}
+    .btn.blue{background:var(--blue); color:#fff}
+    .btn.green{background:var(--green); color:#fff}
+    .btn.all{background:#111827; color:#fff}
+    .verse { font-size: clamp(18px, 2.2vw, 22px); line-height:1.55; text-align:center; margin: 14px 0 4px }
+    .ref { text-align:center; color: var(--muted) }
   </style>
 </head>
 <body>
-  <h1>Daily Bible Verse</h1>
-  <div class="buttons">
-    <button class="btn red" data-color="red">Red</button>
-    <button class="btn blue" data-color="blue">Blue</button>
-    <button class="btn green" data-color="green">Green</button>
-    <button class="btn" id="btn-all">All</button>
+  <div class="wrap">
+    <div class="card">
+      <h1>Daily Bible Verse</h1>
+      <div class="buttons">
+        <button class="btn red" data-color="red">Red</button>
+        <button class="btn blue" data-color="blue">Blue</button>
+        <button class="btn green" data-color="green">Green</button>
+        <button class="btn all" id="btn-all">All</button>
+      </div>
+      <div class="verse" id="verse-text">Pick a color to begin.</div>
+      <div class="ref" id="verse-ref"></div>
+    </div>
   </div>
 
-  <div class="verse" id="verse-text">Pick a color to begin.</div>
-  <div class="ref" id="verse-ref"></div>
-
 <script>
+// Tries to load verses from verses.json (same folder). Falls back to sample.
 const SAMPLE_VERSES = {
   red: [ { text: "For God so loved the world that He gave His one and only Son…", ref: "John 3:16" } ],
   blue: [ { text: "The Lord is my shepherd; I shall not want.", ref: "Psalm 23:1" } ],
   green: [ { text: "Trust in the Lord with all your heart…", ref: "Proverbs 3:5-6" } ]
 };
 
-let verses = SAMPLE_VERSES;
+let verses = { red:[], blue:[], green:[] };
 let deck = [];
 let currentColor = '';
 
-function shuffle(arr) {
+async function loadVerses(){
+  try{
+    const res = await fetch('verses.json', { cache: 'no-store' });
+    if(res.ok){
+      const data = await res.json();
+      verses = normalize(data); return;
+    }
+  }catch(e){}
+  verses = normalize(SAMPLE_VERSES);
+}
+
+function normalize(data){
+  const out = { red:[], blue:[], green:[] };
+  for (const c of ['red','blue','green']){
+    const arr = Array.isArray(data?.[c]) ? data[c] : [];
+    out[c] = arr.filter(v => v && typeof v.text === 'string' && v.text.trim().length);
+  }
+  return out;
+}
+
+function shuffle(arr){
   const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+  for (let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
   }
   return a;
 }
 
-function refillDeck(color) {
-  const pool = color === 'all' ?
-    ['red', 'blue', 'green'].flatMap(c => verses[c].map(v => ({color: c, ...v}))) :
-    verses[color].map(v => ({color, ...v}));
+function refillDeck(color){
+  const pool = color === 'all'
+    ? ['red','blue','green'].flatMap(c=>verses[c].map(v=>({color:c, ...v})))
+    : (verses[color]||[]).map(v=>({color, ...v}));
   deck = shuffle(pool);
 }
 
-function pick(color) {
-  if (currentColor !== color || deck.length === 0) {
+function pick(color){
+  if (!color) return;
+  if (currentColor !== color || deck.length === 0){
     currentColor = color;
     refillDeck(color);
   }
   const card = deck.pop();
+  if(!card){
+    document.getElementById('verse-text').textContent = 'No verses found for this color.';
+    document.getElementById('verse-ref').textContent = '';
+    return;
+  }
   document.getElementById('verse-text').textContent = card.text;
   document.getElementById('verse-ref').textContent = card.ref ? `— ${card.ref}` : '';
 }
 
-document.querySelectorAll('[data-color]').forEach(btn => {
-  btn.addEventListener('click', e => pick(e.target.getAttribute('data-color')));
-});
+document.querySelectorAll('[data-color]').forEach(btn => btn.addEventListener('click', e => pick(e.currentTarget.getAttribute('data-color'))));
 document.getElementById('btn-all').addEventListener('click', () => pick('all'));
+
+loadVerses();
 </script>
 </body>
 </html>
