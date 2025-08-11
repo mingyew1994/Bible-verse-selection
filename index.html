@@ -3,19 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bible Verse Picker</title>
+  <title>Daily Bible Verse</title>
   <style>
     body { font-family: sans-serif; background: #0b1020; color: #fff; margin: 0; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 20px; }
     .btn { padding: 10px 14px; margin: 4px; border: none; border-radius: 6px; cursor: pointer; }
     .red { background: #ef4444; color: #fff; }
     .blue { background: #3b82f6; color: #fff; }
     .green { background: #10b981; color: #fff; }
-    .verse { margin-top: 20px; font-size: 1.2em; }
-    .ref { font-size: 0.9em; color: #aaa; }
+    .verse { margin-top: 20px; font-size: 1.2em; text-align: center; }
+    .ref { font-size: 0.9em; color: #aaa; text-align: center; }
+    .buttons { text-align: center; }
   </style>
 </head>
 <body>
-  <div>
+  <h1>Daily Bible Verse</h1>
+  <div class="buttons">
     <button class="btn red" data-color="red">Red</button>
     <button class="btn blue" data-color="blue">Blue</button>
     <button class="btn green" data-color="green">Green</button>
