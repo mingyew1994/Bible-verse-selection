@@ -1,11 +1,50 @@
 {
-  "red": [
-    { "text": "For God so loved the world that He gave His one and only Son…", "ref": "John 3:16" }
+  "honesty": [
+    { "text": "Do not lie to each other, since you have taken off your old self with its practices and have put on the new self. which is being renewed in knowledge in the image of its Creator.", "ref": "Colossians 3:9-10" },
+    { "text": "The integrity of the upright guides them, but the unfaithful are destroyed by their duplicity.", "ref": "Proverbs 11:3" }
   ],
-  "blue": [
-    { "text": "The Lord is my shepherd; I shall not want.", "ref": "Psalm 23:1" }
+  "diligence": [
+    { "text": "For the moment all discipline seems painful rather than pleasant, but later it yields the peaceful fruit of righteousness to those who have been trained by it.", "ref": "Hebrews 12:11" },
+    { "text": "But I say, walk by the Spirit, and you will not gratify the desires of the flesh.", "ref": "Galatians 5:16" }
   ],
-  "green": [
-    { "text": "Trust in the Lord with all your heart…", "ref": "Proverbs 3:5-6" }
+  "selfdiscipline": [
+    { "text": "The hand of the diligent will rule, while the slothful will be put to forced labor.", "ref": "Proverbs 12:24" },
+    { "text": "Be diligent to present yourself approved to God, a worker who does not need to be ashamed, rightly dividing the word of truth.", "ref": "2 Timothy 2:15" }
+  ],
+  "empathy": [
+    { "text": "Do nothing from rivalry or conceit, but in humility count others more significant than yourselves.", "ref": "Philippians 2:3" },
+    { "text": "Let each of you look not only to his own interests, but also to the interests of others.", "ref": "Philippians 2:4" }
+  ],
+  "positivity": [
+    { "text": "This is the day that the Lord has made; let us rejoice and be glad in it.", "ref": "Psalm 118:24" },
+    { "text": "Rejoice always, pray without ceasing, give thanks in all circumstances; for this is the will of God in Christ Jesus for you.", "ref": "1 Thessalonians 5:16-18" }
+  ],
+  "accountability": [
+    { "text": "Brothers, if anyone is caught in any transgression, you who are spiritual should restore him in a spirit of gentleness. Keep watch on yourself, lest you too be tempted.", "ref": "Galatians 6:1" },
+    { "text": "As each has received a gift, use it to serve one another, as good stewards of God's varied grace.", "ref": "1 Peter 4:10" }
+  ],
+  "dedication": [
+    { "text": "Then Solomon assembled the elders of Israel and all the heads of the tribes, the leaders of the fathers' houses of the people of Israel, before King Solomon in jerusalem, to bring up the ark of the covenant of the Lord out of the city of David, which is Zion.", "ref": "1 Kings 8:1" },
+    { "text": "Then Solomon began to build the house of the Lord in Jerusalem on Mount Moriah, where the Lord had appeared to David his father, at the place that David had appointed, on the threshing floor of Ornan the Jebusite.", "ref": "2 Chronicles 3:1" }
+  ],
+  "faith": [
+    { "text": "So faith comes from hearing, and hearing through the word of Christ.", "ref": "Romans 10:17" },
+    { "text": "For we walk by faith, not by sight.", "ref": "2 Corinthians 5:7" }
+  ],
+  "gratitude": [
+    { "text": "Let us come into his presence with thanksgiving; let us make a joyful noise to him with songs of praise!", "ref": "Psalm 95:2" },
+    { "text": "I will give thanks to you, 0 Lord, among the peoples; I will sing praises to you among the nations.", "ref": "Psalm 108:3" }
+  ],
+  "repentance": [
+    { "text": "The Lord is not slow in keeping his promise, as some understand slowness. Instead he is patient with you, not wanting anyone to perish, but everyone to come to repentance.", "ref": "2 Peter 3:9" },
+    { "text": "Those whom I love I rebuke and discipline. So be earnest and repent.", "ref": "Revelation 3:19" }
+  ],
+  "seeking": [
+    { "text": "Seek the Lord while he may be found; call upon him while he is near.", "ref": "Isaiah 55:6" },
+    { "text": "Seek good, and not evil, that you may live; and so the Lord, the God of hosts, will be with you, as you have said.", "ref": "Amos 5:14" }
+  ],
+  "worship": [
+    { "text": "Serve the Lord with gladness! Come into his presence with singing !", "ref": "Psalm 100:2" },
+    { "text": "But the hour is coming, and is now here, when the true worshipers will worship the Father in spirit and truth, for the Father is seeking such people to worship him .", "ref": "John 4:23" }
   ]
 }
