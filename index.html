@@ -4,288 +4,68 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bible Verse Picker</title>
-  <meta name="description" content="Pick a random Bible verse by color category" />
   <style>
-    :root{
-      --bg:#0b1020; --card:#121a34; --text:#eef2ff; --muted:#aab4d6; --ring:#5b7fff;
-      --red:#ef4444; --blue:#3b82f6; --green:#10b981;
-    }
-    *{box-sizing:border-box}
-    body{margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; background:radial-gradient(1200px 800px at 100% -20%, #14204e, transparent), var(--bg); color:var(--text);}
-    .wrap{max-width:920px;margin:40px auto;padding:24px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:20px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
-    h1{font-size:clamp(22px,4vw,36px);margin:0 0 8px}
-    .sub{color:var(--muted); margin:0 0 16px}
-    .row{display:flex;gap:12px;flex-wrap:wrap}
-    .btn{appearance:none;border:1px solid rgba(255,255,255,.12);background:#0f1733;color:var(--text); padding:10px 14px;border-radius:999px;cursor:pointer;font-weight:600}
-    .btn:hover{transform:translateY(-1px)}
-    .btn:focus{outline:3px solid var(--ring); outline-offset:2px}
-    .pill{display:inline-flex;align-items:center;gap:8px}
-    .pill .dot{width:10px;height:10px;border-radius:50%}
-    .pill.red .dot{background:var(--red)}
-    .pill.blue .dot{background:var(--blue)}
-    .pill.green .dot{background:var(--green)}
-    .verse{font-size:clamp(18px,2.2vw,22px); line-height:1.5; margin:12px 0}
-    .ref{color:var(--muted);font-size:14px}
-    .panel{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .select{background:#0f1733;color:var(--text);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:10px 12px}
-    .tools{display:flex;gap:8px;margin-left:auto}
-    .muted{color:var(--muted)}
-    .footer{opacity:.7;font-size:12px;margin-top:14px}
-    .badge{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:#0f1733}
-    .hidden{display:none}
-    textarea{width:100%;min-height:120px;background:#0f1733;color:var(--text);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:10px}
-    a{color:#b9ccff}
+    body { font-family: sans-serif; background: #0b1020; color: #fff; margin: 0; padding: 20px; }
+    .btn { padding: 10px 14px; margin: 4px; border: none; border-radius: 6px; cursor: pointer; }
+    .red { background: #ef4444; color: #fff; }
+    .blue { background: #3b82f6; color: #fff; }
+    .green { background: #10b981; color: #fff; }
+    .verse { margin-top: 20px; font-size: 1.2em; }
+    .ref { font-size: 0.9em; color: #aaa; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>🎁 Bible Verse Picker</h1>
-      <p class="sub">Tap a color to get a random verse. Perfect for NFC keychains and quick encouragements.</p>
-
-      <div class="row" role="group" aria-label="Color selectors">
-        <button class="btn pill red" data-color="red"><span class="dot"></span>Red</button>
-        <button class="btn pill blue" data-color="blue"><span class="dot"></span>Blue</button>
-        <button class="btn pill green" data-color="green"><span class="dot"></span>Green</button>
-        <button class="btn" id="btn-all">All</button>
-        <span class="badge" id="count-badge">0 verses</span>
-      </div>
-
-      <div id="result" class="card" style="margin-top:16px; padding:18px">
-        <div class="verse" id="verse-text">Pick a color to begin.</div>
-        <div class="ref" id="verse-ref"></div>
-      </div>
-
-      <div class="panel" style="margin-top:12px">
-        <select id="color-select" class="select" aria-label="Current color">
-          <option value="">— Choose color —</option>
-          <option value="red">Red</option>
-          <option value="blue">Blue</option>
-          <option value="green">Green</option>
-          <option value="all">All</option>
-        </select>
-        <button class="btn" id="btn-shuffle">Shuffle</button>
-        <button class="btn" id="btn-copy">Copy verse</button>
-        <button class="btn" id="btn-share">Share link</button>
-        <span class="muted" id="status" role="status" aria-live="polite"></span>
-      </div>
-
-      <details style="margin-top:16px">
-        <summary>Manage verses (optional)</summary>
-        <p class="muted">Paste your verses JSON below and click “Load JSON”. The app will remember it in this browser. For deployment, embed it into the code (see comments) or host <code>verses.json</code> next to this file.</p>
-        <textarea id="json-input" placeholder='{"red":[{"text":"…","ref":"John 3:16"}],"blue":[],"green":[]}'></textarea>
-        <div class="row" style="margin-top:8px">
-          <button class="btn" id="btn-load-json">Load JSON</button>
-          <button class="btn" id="btn-clear-json">Clear saved JSON</button>
-          <a class="btn" download="verses.sample.json" id="btn-download-json">Download sample</a>
-        </div>
-        <p class="footer">Schema: <code>{ color: Verse[] }</code> with <code>Verse = { text: string, ref?: string }</code>.</p>
-      </details>
-
-      <p class="footer">Tip: You can link directly to a color using <code>?c=red</code>, <code>?c=blue</code>, <code>?c=green</code> or <code>?c=all</code>. Example: <code>https://your.site/verse.html?c=red</code></p>
-    </div>
+  <div>
+    <button class="btn red" data-color="red">Red</button>
+    <button class="btn blue" data-color="blue">Blue</button>
+    <button class="btn green" data-color="green">Green</button>
+    <button class="btn" id="btn-all">All</button>
   </div>
 
+  <div class="verse" id="verse-text">Pick a color to begin.</div>
+  <div class="ref" id="verse-ref"></div>
+
 <script>
-/*****
- HOW TO ADD YOUR VERSES
- --------------------------------------
- Option A (quickest): Paste your JSON in the Manage section and click “Load JSON”. It saves to localStorage for you.
- Option B (for deployment): Replace the SAMPLE_VERSES below with your full list and re-upload this 
- single file. Or, host a "verses.json" file next to this HTML and the app will try to fetch it.
-
- JSON schema:
- {
-   "red": [ {"text":"For God so loved the world…", "ref":"John 3:16"}, … ],
-   "blue": [ {"text":"The Lord is my shepherd…", "ref":"Psalm 23:1"}, … ],
-   "green": [ {"text":"Trust in the Lord…", "ref":"Proverbs 3:5-6"}, … ]
- }
-
- Pro tip: ~50 verses per color is great. You can omit "ref" if you like.
-*****/
-
 const SAMPLE_VERSES = {
-  red: [
-    { text: "For God so loved the world that He gave His one and only Son…", ref: "John 3:16" },
-    { text: "Come to me, all who labor and are heavy laden, and I will give you rest.", ref: "Matthew 11:28" }
-  ],
-  blue: [
-    { text: "The Lord is my shepherd; I shall not want.", ref: "Psalm 23:1" },
-    { text: "Be still, and know that I am God.", ref: "Psalm 46:10" }
-  ],
-  green: [
-    { text: "Trust in the Lord with all your heart…", ref: "Proverbs 3:5-6" },
-    { text: "In all your ways acknowledge Him, and He will make straight your paths.", ref: "Proverbs 3:6" }
-  ]
+  red: [ { text: "For God so loved the world that He gave His one and only Son…", ref: "John 3:16" } ],
+  blue: [ { text: "The Lord is my shepherd; I shall not want.", ref: "Psalm 23:1" } ],
+  green: [ { text: "Trust in the Lord with all your heart…", ref: "Proverbs 3:5-6" } ]
 };
 
-const el = (id) => document.getElementById(id);
-const resultText = el('verse-text');
-const resultRef = el('verse-ref');
-const status = el('status');
-const colorSelect = el('color-select');
-const countBadge = el('count-badge');
-
-let verses = { red: [], blue: [], green: [] };
-let deck = []; // current pool (array of {color, text, ref}) with no repeats until exhausted
+let verses = SAMPLE_VERSES;
+let deck = [];
 let currentColor = '';
 
-function loadFromLocal() {
-  try {
-    const raw = localStorage.getItem('verse-data');
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    if (data && typeof data === 'object') return data;
-  } catch {}
-  return null;
-}
-
-async function loadFromJsonFile() {
-  try {
-    const res = await fetch('verses.json', { cache:'no-store' });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data;
-  } catch { return null; }
-}
-
-function useVerses(data){
-  // Validate and normalize
-  const norm = { red: [], blue: [], green: [] };
-  for (const color of ['red','blue','green']){
-    const arr = Array.isArray(data?.[color]) ? data[color] : [];
-    norm[color] = arr.filter(v => v && typeof v.text === 'string' && v.text.trim().length);
-  }
-  verses = norm;
-  updateCount();
-}
-
-function updateCount(){
-  const c = currentColor === 'all' ?
-    verses.red.length + verses.blue.length + verses.green.length :
-    (verses[currentColor] ? verses[currentColor].length : 0);
-  countBadge.textContent = `${c} verse${c===1?'':'s'}`;
-}
-
-function refillDeck(color){
-  const pool = color === 'all' ?
-    ['red','blue','green'].flatMap(c=>verses[c].map(v=>({color:c,...v}))) :
-    (verses[color]||[]).map(v=>({color, ...v}));
-  deck = shuffle(pool);
-}
-
-function shuffle(arr){
+function shuffle(arr) {
   const a = arr.slice();
-  for (let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
 }
 
-function pick(color){
-  if (!color) return;
-  if (currentColor !== color || deck.length === 0){
+function refillDeck(color) {
+  const pool = color === 'all' ?
+    ['red', 'blue', 'green'].flatMap(c => verses[c].map(v => ({color: c, ...v}))) :
+    verses[color].map(v => ({color, ...v}));
+  deck = shuffle(pool);
+}
+
+function pick(color) {
+  if (currentColor !== color || deck.length === 0) {
     currentColor = color;
     refillDeck(color);
   }
   const card = deck.pop();
-  if (!card){
-    resultText.textContent = 'No verses found for this color.';
-    resultRef.textContent = '';
-    updateCount();
-    return;
-  }
-  resultText.textContent = card.text;
-  resultRef.textContent = card.ref ? `— ${card.ref}` : '';
-  updateCount();
+  document.getElementById('verse-text').textContent = card.text;
+  document.getElementById('verse-ref').textContent = card.ref ? `— ${card.ref}` : '';
 }
 
-function copyVerse(){
-  const text = resultRef.textContent ? `${resultText.textContent} \n${resultRef.textContent}` : resultText.textContent;
-  navigator.clipboard.writeText(text).then(()=>flash('Copied!')).catch(()=>flash('Copy failed'));
-}
-
-function shareLink(){
-  const url = new URL(location.href);
-  url.searchParams.set('c', currentColor || '');
-  navigator.clipboard.writeText(url.toString())
-    .then(()=>flash('Link copied'))
-    .catch(()=>{
-      prompt('Copy this link:', url.toString());
-    });
-}
-
-function flash(msg){
-  status.textContent = msg;
-  setTimeout(()=>status.textContent='', 1600);
-}
-
-function applyQuery(){
-  const c = new URLSearchParams(location.search).get('c');
-  if (['red','blue','green','all'].includes(c)){
-    colorSelect.value = c === 'all' ? 'all' : c;
-    pick(c === 'all' ? 'all' : c);
-  }
-}
-
-// UI wiring
-for (const btn of document.querySelectorAll('[data-color]')){
-  btn.addEventListener('click', e => {
-    const c = e.currentTarget.getAttribute('data-color');
-    colorSelect.value = c;
-    pick(c);
-  });
-}
-
-document.getElementById('btn-all').addEventListener('click', ()=>{ colorSelect.value='all'; pick('all'); });
-
-document.getElementById('btn-shuffle').addEventListener('click', ()=> pick(colorSelect.value || currentColor || 'red'));
-
-document.getElementById('btn-copy').addEventListener('click', copyVerse);
-
-document.getElementById('btn-share').addEventListener('click', shareLink);
-
-// Manage JSON panel
-const input = el('json-input');
-const btnLoad = el('btn-load-json');
-const btnClear = el('btn-clear-json');
-const btnDownload = el('btn-download-json');
-
-btnLoad.addEventListener('click', ()=>{
-  try {
-    const obj = JSON.parse(input.value);
-    localStorage.setItem('verse-data', JSON.stringify(obj));
-    useVerses(obj);
-    flash('Loaded JSON');
-    if (colorSelect.value) pick(colorSelect.value);
-  } catch(err){ flash('Invalid JSON'); }
+document.querySelectorAll('[data-color]').forEach(btn => {
+  btn.addEventListener('click', e => pick(e.target.getAttribute('data-color')));
 });
-
-btnClear.addEventListener('click', ()=>{
-  localStorage.removeItem('verse-data');
-  useVerses(SAMPLE_VERSES);
-  flash('Cleared. Using sample.');
-  if (colorSelect.value) pick(colorSelect.value);
-});
-
-btnDownload.addEventListener('click', ()=>{
-  const blob = new Blob([JSON.stringify(SAMPLE_VERSES, null, 2)], {type:'application/json'});
-  btnDownload.href = URL.createObjectURL(blob);
-});
-
-// Bootstrap load order: localStorage -> verses.json -> sample
-(async function init(){
-  const local = loadFromLocal();
-  if (local){ useVerses(local); }
-  else {
-    const remote = await loadFromJsonFile();
-    if (remote){ useVerses(remote); }
-    else { useVerses(SAMPLE_VERSES); }
-  }
-  applyQuery();
-})();
+document.getElementById('btn-all').addEventListener('click', () => pick('all'));
 </script>
 </body>
 </html>
