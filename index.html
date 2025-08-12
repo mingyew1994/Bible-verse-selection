@@ -7,8 +7,12 @@
   <style>
     :root{
       --card-bg: rgba(255,255,255,.85);
-      --text: #0f1a2a;
-      --muted: #4b5563;
+      --text: #000;          /* all text black */
+      --muted: #000;         /* ref text black as requested */
+      /* category colors (rainbow-ish from red to violet) */
+      --honesty: #ef4444; --diligence: #f97316; --selfdiscipline: #facc15; --empathy: #84cc16;
+      --positivity: #10b981; --accountability: #14b8a6; --dedication: #06b6d4; --faith: #3b82f6;
+      --gratitude: #6366f1; --repentance: #8b5cf6; --seeking: #a855f7; --worship: #d946ef;
     }
     *, *::before, *::after { box-sizing: border-box }
     html, body { height: 100% }
@@ -35,8 +39,23 @@
     }
     h1 { text-align:center; margin: 0 0 16px; font-size: clamp(22px, 5vw, 36px); }
     .buttons { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:12px }
-    .btn { padding: 10px 14px; border: none; border-radius: 999px; cursor: pointer; font-weight:600; background:black; color:#fff }
-    .btn.all{background:#111827}
+    .btn { padding: 10px 14px; border: none; border-radius: 999px; cursor: pointer; font-weight:600; color:#000 }
+    /* category button backgrounds (keep colored), text black */
+    .btn.honesty{background:var(--honesty)}
+    .btn.diligence{background:var(--diligence)}
+    .btn.selfdiscipline{background:var(--selfdiscipline)}
+    .btn.empathy{background:var(--empathy)}
+    .btn.positivity{background:var(--positivity)}
+    .btn.accountability{background:var(--accountability)}
+    .btn.dedication{background:var(--dedication)}
+    .btn.faith{background:var(--faith)}
+    .btn.gratitude{background:var(--gratitude)}
+    .btn.repentance{background:var(--repentance)}
+    .btn.seeking{background:var(--seeking)}
+    .btn.worship{background:var(--worship)}
+    /* Any Category button: dark bg, white text */
+    .btn.all{background:#111827; color:#fff}
+
     .verse { font-size: clamp(18px, 2.2vw, 22px); line-height:1.55; text-align:center; margin: 14px 0 4px }
     .ref { text-align:center; color: var(--muted) }
   </style>
@@ -46,18 +65,18 @@
     <div class="card">
       <h1>Daily Bible Verse</h1>
       <div class="buttons">
-        <button class="btn" data-color="honesty">Honesty</button>
-        <button class="btn" data-color="diligence">Diligence</button>
-        <button class="btn" data-color="selfdiscipline">Self-Discipline</button>
-        <button class="btn" data-color="empathy">Empathy</button>
-        <button class="btn" data-color="positivity">Positivity</button>
-        <button class="btn" data-color="accountability">Accountability</button>
-        <button class="btn" data-color="dedication">Dedication</button>
-        <button class="btn" data-color="faith">Faith</button>
-        <button class="btn" data-color="gratitude">Gratitude</button>
-        <button class="btn" data-color="repentance">Repentance</button>
-        <button class="btn" data-color="seeking">Seeking</button>
-        <button class="btn" data-color="worship">Worship</button>
+        <button class="btn honesty" data-color="honesty">Honesty</button>
+        <button class="btn diligence" data-color="diligence">Diligence</button>
+        <button class="btn selfdiscipline" data-color="selfdiscipline">Self-Discipline</button>
+        <button class="btn empathy" data-color="empathy">Empathy</button>
+        <button class="btn positivity" data-color="positivity">Positivity</button>
+        <button class="btn accountability" data-color="accountability">Accountability</button>
+        <button class="btn dedication" data-color="dedication">Dedication</button>
+        <button class="btn faith" data-color="faith">Faith</button>
+        <button class="btn gratitude" data-color="gratitude">Gratitude</button>
+        <button class="btn repentance" data-color="repentance">Repentance</button>
+        <button class="btn seeking" data-color="seeking">Seeking</button>
+        <button class="btn worship" data-color="worship">Worship</button>
         <button class="btn all" id="btn-all">Any Category</button>
       </div>
       <div class="verse" id="verse-text">Pick a category to begin.</div>
